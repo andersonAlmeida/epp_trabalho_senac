@@ -1,6 +1,3 @@
-node_modules
-*.log
 /vendor/
 /logs/*
 !/logs/README.md
-*.sql
