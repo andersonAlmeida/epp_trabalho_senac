@@ -1,8 +1,9 @@
 <?php
-    namespace App;
+    namespace App\Models;
 
     include_once __DIR__ . '/../classes/Atracao.php';
 
+    use Slim\App;
     use Illuminate\Database\Eloquent\Model;
 
     class AtracaoModel extends Model
@@ -27,9 +28,12 @@
                  
         }
 
-        public function listar()
+        public function listar($app)
         {
-		    
+            $db = $app->getContainer()->get('db');
+            $db::all();
+
+            print($db);
         }
 
         public function buscarPorId($id)

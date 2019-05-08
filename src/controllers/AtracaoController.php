@@ -1,13 +1,15 @@
 <?php
-// use App\AtracaoModel;
+namespace App\Controllers;
 
-include_once __DIR__ . '/../classes/Atracao.php';
-include_once __DIR__ . '/../models/AtracaoModel.php';
-
+use  App\Classes\Atracao;
+use  App\Models\AtracaoModel;
 
 class AtracaoController {
-    public function listar($request, $response, $args) {
-         return 'oi';
+    public function listar($request, $response, $app, $args) {
+        $mod = new AtracaoModel();
+        $resultado = $mod->listar($app); 
+
+        return $response->withJson($resultado,200); 
     }
     
     public function buscarPorId($request, $response, $args) {
@@ -15,13 +17,13 @@ class AtracaoController {
     }
 
     public function inserir( $request, $response, $args) {        
-        $a = $request->getParsedBody(); 
-        $atracao = new Atracao($a['nome'], $a['descricao'], $a['inicio'], $a['fim'], $a['categoria'], $a['endereco'], $a['lat'], $a['lng']);
+        // $a = $request->getParsedBody(); 
+        // $atracao = new Atracao($a['nome'], $a['descricao'], $a['inicio'], $a['fim'], $a['categoria'], $a['endereco'], $a['lat'], $a['lng']);
 
-        $mod = new AtracaoModel;
-        $resultado = $mod->inserir($atracao); 
+        // $mod = new AtracaoModel;
+        // $resultado = $mod->inserir($atracao); 
 
-        return $response->withJson($resultado,201);   
+        // return $response->withJson($resultado,201);   
     }
     
     public function atualizar($request, $response, $args) {

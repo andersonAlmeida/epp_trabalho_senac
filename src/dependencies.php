@@ -30,4 +30,9 @@ return function (App $app) {
 
         return $capsule;
     };
+
+    // Controllers
+    $container['AtracaoController'] = function ($container) {
+        return new \App\Controllers\AtracaoController( $container->get('settings') );
+    };
 };
