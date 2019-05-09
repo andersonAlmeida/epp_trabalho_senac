@@ -4,7 +4,8 @@ use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-use App\Controllers\AtracaoController;
+use Controllers\AtracaoController;
+use Controllers\AdministradorController;
 
 // include_once  __DIR__ . '/controllers/UsuarioController.php';
 // include_once  __DIR__ . '/controllers/AtracaoController.php';
@@ -23,11 +24,14 @@ return function (App $app) {
     // ===============================================================================================
     // CMS ===========================================================================================
     // ===============================================================================================
-    $app->group('/cms/usuario', function() use ($app, $container) {
-        $app->get('', function (Request $request, Response $response, array $args) use ($app, $container) {            
-            AtracaoController::listar($request, $response, $app, $args);
+    $app->group('/cms/admin', function() use ($app) {
+        $app->get('', function($request, $response, $args) {            
+            return AdministradorController::listar($request, $response, $args);
         });
-        $app->post('','UsuarionController:inserir');
+
+        $app->post('', function($request, $response, $args) { 
+            return AdministradorController::criar_admin($request, $response, $args);
+        });
     
         $app->get('/{id}','UsuarionController:buscarPorId');    
         $app->put('/{id}','UsuarionController:atualizar');

@@ -1,8 +1,8 @@
 <?php
-namespace App\Controllers;
+namespace Controllers;
 
-use  App\Classes\Atracao;
-use  App\Models\AtracaoModel;
+use  Classes\Atracao;
+use  Models\AtracaoModel;
 
 class AtracaoController {
     public function listar($request, $response, $app, $args) {

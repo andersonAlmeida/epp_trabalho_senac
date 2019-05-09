@@ -1,5 +1,5 @@
 <?php
-    namespace App\Models;
+    namespace Models;
 
     include_once __DIR__ . '/../classes/Atracao.php';
 

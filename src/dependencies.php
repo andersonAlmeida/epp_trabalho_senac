@@ -21,18 +21,19 @@ return function (App $app) {
     };
 
     // Service factory for the ORM
-    $container['db'] = function ($container) {
-        $capsule = new \Illuminate\Database\Capsule\Manager;
-        $capsule->addConnection($container['settings']['db']);
+    $capsule = new \Illuminate\Database\Capsule\Manager;
+    $capsule->addConnection($container['settings']['db']);
 
-        $capsule->setAsGlobal();
-        $capsule->bootEloquent();
+    $capsule->setAsGlobal();
+    $capsule->bootEloquent();
 
+    $container['db'] = function ($container) use ($capsule) {
         return $capsule;
     };
 
     // Controllers
-    $container['AtracaoController'] = function ($container) {
-        return new \App\Controllers\AtracaoController( $container->get('settings') );
+    $container[Controllers\AdministradorController::class] = function ($c) {
+        $table = $c->get('db')->table('administrador');
+        return new Controllers\AdministradorController( $table );
     };
 };
