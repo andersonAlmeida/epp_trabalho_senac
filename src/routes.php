@@ -4,7 +4,7 @@ use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-use Controllers\AtracaoController;
+use Controllers\AtracaoCategoriaController;
 use Controllers\AdministradorController;
 use Controllers\NivelController;
 use Controllers\ClienteController;
@@ -59,16 +59,26 @@ return function (App $app) {
         });
     });
     
-    $app->group('/cms/atracao', function() use ($app, $container) {
-        $app->get('', function (Request $request, Response $response, array $args) use ($app, $container) {          
-            $a = new AtracaoController;  
-            $a->listar($request, $response, $app, $args);
+    $app->group('/cms/categoria', function() use ($app, $container) {
+        $app->get('', function($request, $response, $args) {            
+            return AtracaoCategoriaController::listar($request, $response, $args);
         });
-        $app->post('','AtracaoController:inserir');
+
+        $app->post('', function($request, $response, $args) { 
+            return AtracaoCategoriaController::inserir($request, $response, $args);
+        });
     
-        $app->get('/{id}','AtracaoController:buscarPorId');    
-        $app->put('/{id}','AtracaoController:atualizar');
-        $app->delete('/{id}', 'AtracaoController:deletar');
+        $app->get('/{id}', function($request, $response, $args) {            
+            return AtracaoCategoriaController::buscarPorId($request, $response, $args);
+        }); 
+
+        $app->put('/{id}', function($request, $response, $args) {            
+            return AtracaoCategoriaController::atualizar($request, $response, $args);
+        });
+
+        $app->delete('/{id}', function($request, $response, $args) {            
+            return AtracaoCategoriaController::deletar($request, $response, $args);
+        });
     });
 
     // Cliente

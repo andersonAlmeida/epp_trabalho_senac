@@ -24,7 +24,7 @@ class AdministradorController {
         $p = $request->getParsedBody();
         $nome = $p['nome'];
         $email = $p['email'];
-        $senha = $p['senha'];
+        $senha = password_hash($p['senha'], PASSWORD_DEFAULT); // criptografa a senha do Admin para salvarno banco
 
         $admin = AdministradorModel::create(['nome'=>$nome,'email'=>$email,'senha'=>$senha]);
         return $response->withJson($admin, 201); 
@@ -35,7 +35,7 @@ class AdministradorController {
         $id = $args['id'];
         $nome = $p['nome'];
         $email = $p['email'];
-        $senha = $p['senha'];
+        $senha = password_hash($p['senha'], PASSWORD_DEFAULT); // criptografa a senha do Admin para salvarno banco
         $resposta = null;
 
         try {

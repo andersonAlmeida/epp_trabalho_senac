@@ -16,7 +16,7 @@ class ClienteController {
         $p = $request->getParsedBody();
         $nome = $p['nome'];
         $email = $p['email'];
-        $senha = $p['senha'];
+        $senha = password_hash($p['senha'], PASSWORD_DEFAULT); // criptografa a senha do Cliente para salvarno banco
         $nivel = $p['cod_nivel'];
 
         $cliente = ClienteModel::create(['nome'=>$nome,'email'=>$email,'senha'=>$senha,'cod_nivel'=>$nivel]);
@@ -28,7 +28,7 @@ class ClienteController {
         $id = $args['id'];
         $nome = $p['nome'];
         $email = $p['email'];
-        $senha = $p['senha'];
+        $senha = password_hash($p['senha'], PASSWORD_DEFAULT); // criptografa a senha do Cliente para salvarno banco
         $nivel = $p['cod_nivel'];
 
         try {
