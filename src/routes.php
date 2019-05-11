@@ -6,20 +6,11 @@ use Slim\Http\Response;
 
 use Controllers\AtracaoController;
 use Controllers\AdministradorController;
-
-// include_once  __DIR__ . '/controllers/UsuarioController.php';
-// include_once  __DIR__ . '/controllers/AtracaoController.php';
+use Controllers\NivelController;
+use Controllers\ClienteController;
 
 return function (App $app) {
     $container = $app->getContainer();
-
-    $app->get('/', function (Request $request, Response $response, array $args) use ($app, $container) {
-        $db = $app->getContainer()->get('db');
-        $usuarios = $db->table('usuario')->get();
-
-        // Render index view
-        return $container->get('renderer')->render($response, 'index.phtml', $args);
-    });
 
     // ===============================================================================================
     // CMS ===========================================================================================
@@ -33,9 +24,39 @@ return function (App $app) {
             return AdministradorController::criar_admin($request, $response, $args);
         });
     
-        $app->get('/{id}','UsuarionController:buscarPorId');    
-        $app->put('/{id}','UsuarionController:atualizar');
-        $app->delete('/{id}', 'UsuarionController:deletar');
+        $app->get('/{id}', function($request, $response, $args) {            
+            return AdministradorController::buscarPorId($request, $response, $args);
+        }); 
+
+        $app->put('/{id}', function($request, $response, $args) {            
+            return AdministradorController::atualizar($request, $response, $args);
+        });
+
+        $app->delete('/{id}', function($request, $response, $args) {            
+            return AdministradorController::deletar($request, $response, $args);
+        });
+    });
+
+    $app->group('/cms/nivel', function() use ($app) {
+        $app->get('', function($request, $response, $args) {            
+            return NivelController::listar($request, $response, $args);
+        });
+
+        $app->post('', function($request, $response, $args) { 
+            return NivelController::inserir($request, $response, $args);
+        });
+    
+        $app->get('/{id}', function($request, $response, $args) {            
+            return NivelController::buscarPorId($request, $response, $args);
+        }); 
+
+        $app->put('/{id}', function($request, $response, $args) {            
+            return NivelController::atualizar($request, $response, $args);
+        });
+
+        $app->delete('/{id}', function($request, $response, $args) {            
+            return NivelController::deletar($request, $response, $args);
+        });
     });
     
     $app->group('/cms/atracao', function() use ($app, $container) {
@@ -48,5 +69,28 @@ return function (App $app) {
         $app->get('/{id}','AtracaoController:buscarPorId');    
         $app->put('/{id}','AtracaoController:atualizar');
         $app->delete('/{id}', 'AtracaoController:deletar');
+    });
+
+    // Cliente
+    $app->group('/cliente', function() use ($app, $container) {
+        $app->get('', function($request, $response, $args) {            
+            return ClienteController::listar($request, $response, $args);
+        });
+
+        $app->post('', function($request, $response, $args) { 
+            return ClienteController::inserir($request, $response, $args);
+        });
+    
+        $app->get('/{id}', function($request, $response, $args) {            
+            return ClienteController::buscarPorId($request, $response, $args);
+        }); 
+
+        $app->put('/{id}', function($request, $response, $args) {            
+            return ClienteController::atualizar($request, $response, $args);
+        });
+
+        $app->delete('/{id}', function($request, $response, $args) {            
+            return ClienteController::deletar($request, $response, $args);
+        });
     });
 };

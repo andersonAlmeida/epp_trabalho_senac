@@ -10,6 +10,8 @@
     {
         protected $table = 'atracao';
         public $timestamps = false;
+        protected $fillable = ['nome', 'email', 'senha'];
+        protected $primaryKey = 'cod_atracao';
 
         public function inserir(Atracao $atracao)
         {
