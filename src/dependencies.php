@@ -36,7 +36,4 @@ return function (App $app) {
     //     $table = $c->get('db')->table('administrador');
     //     return new Controllers\AdministradorController( $table );
     // };
-
-    // Secret key for authentication
-    $container['secretkey'] = "progInternet2Noite2019/1";
 };

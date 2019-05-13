@@ -75,13 +75,9 @@ class AdministradorController {
         return $response->withJson($admin, 200); 
     }
 
-    public static function login($request, $response, $args, $app) {
+    public static function login($request, $response, $args, $sKey) {
         $p = $request->getParsedBody();
         $admin = AdministradorModel::where('email', $p['email'])->get();
-
-        // var_dump($admin);
-
-        // die();
 
         foreach ($admin as $a) {
             if( password_verify( $p['senha'], $a->senha ) ) {
@@ -89,12 +85,13 @@ class AdministradorController {
                     'user' => strval($a->cod_admin),
                     'nome' => $a->nome
                 );
-                $jwt = JWT::encode($token, $app->get('secretKey'));
+                
+                $jwt = JWT::encode($token, $sKey);
 
                 return $response->withJson(["token" => $jwt], 201)
                     ->withHeader('Content-type', 'application/json');   
             } else {
-                echo "Usuário ou senha inválidos";
+                return $response->withJson(["resposta"=> false, "msg" => "Usuário ou senha inválidos"], 200);           
             }
         }
 
