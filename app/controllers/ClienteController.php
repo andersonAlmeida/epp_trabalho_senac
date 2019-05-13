@@ -75,6 +75,10 @@ class ClienteController {
 
         return $response->withJson($cliente, 200); 
     }
+
+    public static function login($request, $response, $args) {
+        
+    }
 }
 
 ?>

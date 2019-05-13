@@ -4,32 +4,79 @@ namespace Controllers;
 use Models\AtracaoModel;
 
 class AtracaoController {
-    public function listar($request, $response, $app, $args) {
-        $mod = new AtracaoModel();
-        $resultado = $mod->listar($app); 
 
-        return $response->withJson($resultado,200); 
-    }
-    
-    public function buscarPorId($request, $response, $args) {
+    public function __construct() {}
+
+    public static function listar( $request, $response, $args ) {
+        $atracoes = AtracaoModel::with(['categoria', 'fotos', 'avaliacoes'])->orderBy('cod_atracao')->get();
         
+        return $response->withJson($atracoes, 200); 
     }
 
-    public function inserir( $request, $response, $args) {        
-        // $a = $request->getParsedBody(); 
-        // $atracao = new Atracao($a['nome'], $a['descricao'], $a['inicio'], $a['fim'], $a['categoria'], $a['endereco'], $a['lat'], $a['lng']);
+    public static function inserir($request, $response, $args){
+        $p = $request->getParsedBody();
+        $dados = [];
 
-        // $mod = new AtracaoModel;
-        // $resultado = $mod->inserir($atracao); 
+        foreach($p as $key => $value) {
+            $dados[$key] = $value;
+        }                
 
-        // return $response->withJson($resultado,201);   
+        $atracao = AtracaoModel::create($dados);
+        return $response->withJson($atracao, 201); 
     }
+
+    public static function atualizar($request, $response, $args) {
+        $p = $request->getParsedBody();
+        $id = $args['id'];
+
+        try {
+            $atracao = AtracaoModel::find($id);
+
+            $atracao->nome = $p['nome'];
+            $atracao->descricao = $p['descricao'];
+            $atracao->data_inicio = $p['data_inicio'];
+            $atracao->data_fim = $p['data_fim'];
+            $atracao->cod_atracao_categoria = $p['cod_atracao_categoria'];
+            $atracao->endereco = $p['endereco'];
+            $atracao->lat = $p['lat'];
+            $atracao->lng = $p['lng'];
+
+            $atracao->save();  
+            
+            return $response->withJson($atracao, 200); 
+        } catch(Exception $e) {
+            echo 'Exceção capturada: ',  $e->getMessage(), "\n";
+        }
+
+    }
+
+    public static function buscarPorId($request, $response, $args) {        
+        $id = $args['id'];
+
+        try {
+            $atracao = AtracaoModel::with(['categoria', 'fotos'])->find($id);
     
-    public function atualizar($request, $response, $args) {
-          
+            return $response->withJson($atracao, 200); 
+        } catch(Exception $e) {
+            echo 'Exceção capturada: ',  $e->getMessage(), "\n";
+        }
     }
 
-    public function deletar($request, $response, $args) {
-        
+    public static function deletar($request, $response, $args){
+        $id = $args['id'];
+        $atracao = AtracaoModel::find($id);
+
+        if( $atracao ) {
+            $atracao->delete();    
+        } else {
+            $atracao = new \stdClass();
+            
+            $atracao->resposta = false;
+            $atracao->msg = "Atração não encontrada.";
+        }        
+
+        return $response->withJson($atracao, 200); 
     }
 }
+
+?>

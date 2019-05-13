@@ -12,5 +12,14 @@
         public function nivel() {
             return $this->belongsTo('Models\NivelModel', 'cod_nivel');
         }
+        
+        public function avaliacoes() {
+            return $this->hasMany('Models\AvaliacaoModel', 'cod_avaliacao');
+        }
+
+        public function cupons() {
+            return $this->hasMany('Models\CupomModel', 'cod_cupom');
+        }
+        
     }
 ?>

@@ -1,18 +1,11 @@
 <?php
 namespace Controllers;
 
-use Illuminate\Database\Query\Builder;
 use Models\AdministradorModel;
-use TheSeer\Tokenizer\Exception;
+use \Firebase\JWT\JWT;
 
 class AdministradorController {
-    protected $table;
-
-    public function __construct(
-        Builder $table
-    ) {
-        $this->table = $table;
-    }
+    public function __construct() {}
 
     public static function listar( $request, $response, $args ) {
         $admins = AdministradorModel::orderBy('cod_admin')->get();
@@ -80,6 +73,31 @@ class AdministradorController {
         }        
 
         return $response->withJson($admin, 200); 
+    }
+
+    public static function login($request, $response, $args, $app) {
+        $p = $request->getParsedBody();
+        $admin = AdministradorModel::where('email', $p['email'])->get();
+
+        // var_dump($admin);
+
+        // die();
+
+        foreach ($admin as $a) {
+            if( password_verify( $p['senha'], $a->senha ) ) {
+                $token = array(
+                    'user' => strval($a->cod_admin),
+                    'nome' => $a->nome
+                );
+                $jwt = JWT::encode($token, $app->get('secretKey'));
+
+                return $response->withJson(["token" => $jwt], 201)
+                    ->withHeader('Content-type', 'application/json');   
+            } else {
+                echo "Usuário ou senha inválidos";
+            }
+        }
+
     }
 }
 
