@@ -2,6 +2,7 @@
 namespace Controllers;
 
 use Models\ClienteModel;
+use \Firebase\JWT\JWT;
 
 class ClienteController {
     public function __construct() {}
@@ -16,11 +17,23 @@ class ClienteController {
         $p = $request->getParsedBody();
         $nome = $p['nome'];
         $email = $p['email'];
-        $senha = password_hash($p['senha'], PASSWORD_DEFAULT); // criptografa a senha do Cliente para salvarno banco
+        $senha = password_hash($p['senha'], PASSWORD_DEFAULT); // criptografa a senha do Cliente para salvar no banco
         $nivel = $p['cod_nivel'];
+        
+        if( ClienteController::verificaEmail($email) == NULL ) { // verifica se o email já foi cadastrado
+            $cliente = ClienteModel::create(['nome'=>$nome,'email'=>$email,'senha'=>$senha,'cod_nivel'=>$nivel]);
+            return $response->withJson($cliente, 201); 
+        } else {
+            return $response->withJson([
+                "resposta" => false,
+                "msg" => "E-mail já cadastrado"
+            ], 200); 
+        }       
 
-        $cliente = ClienteModel::create(['nome'=>$nome,'email'=>$email,'senha'=>$senha,'cod_nivel'=>$nivel]);
-        return $response->withJson($cliente, 201); 
+    }
+
+    public static function verificaEmail($email) {
+        return ClienteModel::where('email', $email)->first();
     }
 
     public static function atualizar($request, $response, $args) {
@@ -28,7 +41,7 @@ class ClienteController {
         $id = $args['id'];
         $nome = $p['nome'];
         $email = $p['email'];
-        $senha = password_hash($p['senha'], PASSWORD_DEFAULT); // criptografa a senha do Cliente para salvarno banco
+        $senha = password_hash($p['senha'], PASSWORD_DEFAULT); // criptografa a senha do Cliente para salvar no banco
         $nivel = $p['cod_nivel'];
 
         try {
@@ -76,8 +89,26 @@ class ClienteController {
         return $response->withJson($cliente, 200); 
     }
 
-    public static function login($request, $response, $args) {
-        
+    public static function login($request, $response, $args, $sKey) {
+        $p = $request->getParsedBody();
+        $cliente = ClienteModel::where('email', $p['email'])->get();
+
+        foreach ($cliente as $c) {
+            if( password_verify( $p['senha'], $c->senha ) ) {
+                $token = array(
+                    'user' => strval($c->cod_cliente),
+                    'nome' => $c->nome
+                );
+                
+                $jwt = JWT::encode($token, $sKey);
+
+                return $response->withJson(["token" => $jwt], 201)
+                    ->withHeader('Content-type', 'application/json');   
+            } else {
+                return $response->withJson(["resposta"=> false, "msg" => "Usuário ou senha inválidos"], 200);           
+            }
+        }
+
     }
 }
 

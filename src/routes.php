@@ -133,6 +133,11 @@ return function (App $app) {
         $app->delete('/{id}[/]', function($request, $response, $args) {            
             return ClienteController::deletar($request, $response, $args);
         });
+
+        $app->post('/login[/]', function($request, $response, $args) use ($app, $container){             
+            $sk = $container->get('settings')['jwt']['secret'];            
+            return ClienteController::login($request, $response, $args, $sk);
+        });
     });
 
     // Foto
@@ -203,9 +208,4 @@ return function (App $app) {
             return CupomController::deletar($request, $response, $args);
         });
     });
-
-    // Autenticação
-    // $app->post('/login', function($request, $response, $args) { 
-    //     return ClienteController::login($request, $response, $args);
-    // });
 };

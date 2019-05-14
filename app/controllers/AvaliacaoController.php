@@ -2,6 +2,8 @@
 namespace Controllers;
 
 use Models\AvaliacaoModel;
+use Models\ClienteModel;
+use PHPUnit\Framework\Exception;
 
 class AvaliacaoController {
 
@@ -19,10 +21,25 @@ class AvaliacaoController {
 
         foreach($p as $key => $value) {
             $dados[$key] = $value;
-        }                
+        }     
+        
+        try {
+            $avaliacao = AvaliacaoModel::create($dados);
 
-        $avaliacao = AvaliacaoModel::create($dados);
-        return $response->withJson($avaliacao, 201); 
+            if( $avaliacao ) {
+                // Adiciona pontuação por ter avaliado
+                // ex: https://stackoverflow.com/questions/37666135/how-to-increment-and-update-column-in-one-eloquent-query
+                ClienteModel::where('cod_cliente', $dados['cod_cliente'])->increment('pontuacao', 10);
+
+                return $response->withJson($avaliacao, 201);
+            }    
+        } catch (Exception $e) {
+            echo 'Exceção capturada: ',  $e->getMessage(), "\n";
+        }
+
+
+        
+
     }
 
     public static function atualizar($request, $response, $args) {
