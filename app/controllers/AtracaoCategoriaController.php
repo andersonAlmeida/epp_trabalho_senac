@@ -57,7 +57,14 @@ class AtracaoCategoriaController {
         $categoria = AtracaoCategoriaModel::find($id);
 
         if( $categoria ) {
-            $categoria->delete();    
+            try {
+                $categoria->delete();    
+            }catch(\Illuminate\Database\QueryException $e) {
+                return $response->withJson([
+                    "resposta" => false,
+                    "msg" => $e->getMessage()
+                ], 200); 
+            }
         } else {
             $categoria = new \stdClass();
             

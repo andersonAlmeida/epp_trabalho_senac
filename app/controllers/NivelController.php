@@ -3,6 +3,8 @@ namespace Controllers;
 
 // use Illuminate\Database\Query\Builder;
 use Models\NivelModel;
+use PHPUnit\Framework\MockObject\Stub\Exception;
+
 // use TheSeer\Tokenizer\Exception;
 
 class NivelController {
@@ -54,6 +56,7 @@ class NivelController {
             return $response->withJson($nivel, 200); 
         } catch(Exception $e) {
             echo 'Exceção capturada: ',  $e->getMessage(), "\n";
+            die();
         }
     }
 
@@ -62,7 +65,14 @@ class NivelController {
         $nivel = NivelModel::find($id);
 
         if( $nivel ) {
-            $nivel->delete();    
+            try {
+                $nivel->delete();    
+            } catch(\Illuminate\Database\QueryException $e) {
+                return $response->withJson([
+                    "resposta" => false,
+                    "msg" => $e->getMessage()
+                ], 200); 
+            }
         } else {
             $nivel = new \stdClass();
             

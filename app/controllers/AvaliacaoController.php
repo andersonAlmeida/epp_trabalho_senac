@@ -30,6 +30,10 @@ class AvaliacaoController {
                 // Adiciona pontuação por ter avaliado
                 // ex: https://stackoverflow.com/questions/37666135/how-to-increment-and-update-column-in-one-eloquent-query
                 ClienteModel::where('cod_cliente', $dados['cod_cliente'])->increment('pontuacao', 10);
+                
+                // if( AvaliacaoController::calcularPontuacao($dados['cod_cliente']) > 50 ) {
+
+                // }
 
                 return $response->withJson($avaliacao, 201);
             }    
@@ -37,9 +41,10 @@ class AvaliacaoController {
             echo 'Exceção capturada: ',  $e->getMessage(), "\n";
         }
 
+    }
 
-        
-
+    public static function calcularPontuacao($id) {
+        return ClienteModel::find($id)->select('pontuacao');
     }
 
     public static function atualizar($request, $response, $args) {
