@@ -9,6 +9,7 @@ return function (App $app) {
         "path" => "/cms",
         "header" => "Authorization",
         "ignore" => ["/cms/admin/login", "/cliente/login"],
+        "secure" => false,
         "secret" => $app->getContainer()->get('settings')['jwt']['secret'],
         "error" => function ($response, $arguments) {
             $data["status"] = "error";
