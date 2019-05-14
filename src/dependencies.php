@@ -22,7 +22,15 @@ return function (App $app) {
 
     // Service factory for the ORM
     $capsule = new \Illuminate\Database\Capsule\Manager;
-    $capsule->addConnection($container['settings']['db']);
+
+    // echo $_SERVER['SERVER_NAME'];
+    // die();
+
+    if( $_SERVER['SERVER_NAME'] == "localhost" ) {
+        $capsule->addConnection($container['settings']['db']);
+    } else {
+        $capsule->addConnection($container['settings']['db_prod']);
+    }
 
     $capsule->setAsGlobal();
     $capsule->bootEloquent();
