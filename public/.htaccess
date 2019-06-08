@@ -23,5 +23,6 @@
 </IfModule>
 
 <IfModule mod_headers.c>
-    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Origin "*"    
+    Header set Access-Control-Request-Headers "x-requested-with, Content-Type, origin, Authorization, accept, client-security-token"
 </IfModule>
