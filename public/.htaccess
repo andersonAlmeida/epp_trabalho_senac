@@ -22,6 +22,4 @@
   RewriteRule ^ index.php [QSA,L]
 </IfModule>
 
-<IfModule mod_headers.c>
-    Header always set Access-Control-Request-Headers "x-requested-with, Content-Type, origin, Authorization, accept, client-security-token"
-</IfModule>
+
