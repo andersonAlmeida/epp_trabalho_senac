@@ -63,7 +63,7 @@ class AtracaoCategoriaController {
                 return $response->withJson([
                     "resposta" => false,
                     "msg" => $e->getMessage()
-                ], 200); 
+                ], 500); 
             }
         } else {
             $categoria = new \stdClass();

@@ -18,6 +18,8 @@ class AtracaoController {
         $dados = [];
 
         foreach($p as $key => $value) {
+            if( empty($value) ) $value = null;
+            
             $dados[$key] = $value;
         }                
 
@@ -34,8 +36,8 @@ class AtracaoController {
 
             $atracao->nome = $p['nome'];
             $atracao->descricao = $p['descricao'];
-            $atracao->data_inicio = $p['data_inicio'];
-            $atracao->data_fim = $p['data_fim'];
+            $atracao->data_inicio = !empty($p['data_inicio']) ? $p['data_inicio'] : null;
+            $atracao->data_fim = !empty($p['data_fim']) ? $p['data_fim'] : null;
             $atracao->cod_atracao_categoria = $p['cod_atracao_categoria'];
             $atracao->endereco = $p['endereco'];
             $atracao->lat = $p['lat'];
