@@ -14,7 +14,7 @@
         }
 
         public function avaliacoes() {
-            return $this->hasMany('Models\AvaliacaoModel', 'cod_avaliacao');
+            return $this->hasMany('Models\AvaliacaoModel', 'cod_atracao');
         }
 
         public function fotos() {

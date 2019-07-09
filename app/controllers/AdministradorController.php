@@ -88,7 +88,7 @@ class AdministradorController {
                     'name' => $a->nome,
                     'date' => date("Y-m-d H:i:s"),
                     'iat' => time(),
-                    'nbf' => time() + 10,
+                    'nbf' => time() + 1,
                     'exp' => time() + 3600
                 );
                 

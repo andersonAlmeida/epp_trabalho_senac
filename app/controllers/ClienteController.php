@@ -102,13 +102,13 @@ class ClienteController {
                     'nome' => $c->nome,
                     'date' => date("Y-m-d H:i:s"),
                     'iat' => time(),
-                    'nbf' => time() + 10,
+                    'nbf' => time() + 1,
                     'exp' => time() + 3600
                 );
                 
                 $jwt = JWT::encode($token, $sKey);
 
-                return $response->withJson(["token" => $jwt], 201)
+                return $response->withJson(["token" => $jwt, "nome" => $c->nome, "codigo" => $c->cod_cliente, "email" => $c->email], 201)
                     ->withHeader('Content-type', 'application/json');   
             } else {
                 return $response->withJson(["resposta"=> false, "msg" => "Usuário ou senha inválidos"], 200);           
