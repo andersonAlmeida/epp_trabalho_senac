@@ -97,13 +97,15 @@ class ClienteController {
             if( password_verify( $p['senha'], $c->senha ) ) {
                 date_default_timezone_set('America/Sao_Paulo');
 
+                $issuedAt = time();
+
                 $token = array(
                     'user' => strval($c->cod_cliente),
-                    'nome' => $c->nome,
+                    'name' => $c->nome,
                     'date' => date("Y-m-d H:i:s"),
-                    'iat' => time(),
-                    'nbf' => time() + 1,
-                    'exp' => time() + 3600
+                    'iat' => $issuedAt,
+                    'nbf' => $issuedAt,
+                    'exp' => $issuedAt + 3600
                 );
                 
                 $jwt = JWT::encode($token, $sKey);
