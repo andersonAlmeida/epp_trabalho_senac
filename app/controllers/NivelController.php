@@ -71,7 +71,7 @@ class NivelController {
                 return $response->withJson([
                     "resposta" => false,
                     "msg" => $e->getMessage()
-                ], 200); 
+                ], 403); 
             }
         } else {
             $nivel = new \stdClass();

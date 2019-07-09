@@ -110,7 +110,7 @@ class ClienteController {
                 
                 $jwt = JWT::encode($token, $sKey);
 
-                return $response->withJson(["token" => $jwt, "nome" => $c->nome, "codigo" => $c->cod_cliente, "email" => $c->email], 201)
+                return $response->withJson(["token" => $jwt, "nome" => $c->nome, "codigo" => $c->cod_cliente, "email" => $c->email], 200)
                     ->withHeader('Content-type', 'application/json');   
             } else {
                 return $response->withJson(["resposta"=> false, "msg" => "Usuário ou senha inválidos"], 200);           
