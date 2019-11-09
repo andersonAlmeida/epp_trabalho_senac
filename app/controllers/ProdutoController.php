@@ -8,7 +8,7 @@ class ProdutoController {
     public function __construct() {}
 
     public static function listar( $request, $response, $args ) {
-        $produtos = ProdutoModel::all();
+        $produtos = ProdutoModel::with(['categoria', 'marca', 'imagem', 'fornecedor'])->orderBy('id')->get();
 
         return $response->withJson($produtos, 200);
     }

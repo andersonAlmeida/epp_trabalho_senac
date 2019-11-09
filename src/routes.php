@@ -4,24 +4,25 @@ use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-use Controllers\AtracaoController;
-use Controllers\AtracaoCategoriaController;
-use Controllers\AdministradorController;
-use Controllers\NivelController;
-use Controllers\FotoController;
-use Controllers\AvaliacaoController;
-use Controllers\CupomController;
+// use Controllers\AtracaoController;
+// use Controllers\AtracaoCategoriaController;
+// use Controllers\AdministradorController;
+// use Controllers\NivelController;
+// use Controllers\FotoController;
+// use Controllers\AvaliacaoController;
+// use Controllers\CupomController;
 
 use Controllers\ProdutoController;
+use Controllers\ClienteController;
 
 return function (App $app) {
     $container = $app->getContainer();
 
     // Cliente
-    $app->group('/cliente', function() use ($app, $container) {
-        $app->get('[/]', function($request, $response, $args) {
-            return ClienteController::listar($request, $response, $args);
-        });
+    $app->group('/clientes', function() use ($app, $container) {
+        // $app->get('[/]', function($request, $response, $args) {
+        //     return ClienteController::listar($request, $response, $args);
+        // });
 
         $app->post('[/]', function($request, $response, $args) {
             return ClienteController::inserir($request, $response, $args);
