@@ -8,39 +8,27 @@ class ClienteController {
     public function __construct() {}
 
     public static function listar( $request, $response, $args ) {
-        $clientes = ClienteModel::all();
-
-        return $response->withJson($clientes, 200);
+        $clientes = ClienteModel::with('nivel')->orderBy('cod_cliente')->get();
+        
+        return $response->withJson($clientes, 200); 
     }
 
     public static function inserir($request, $response, $args){
         $p = $request->getParsedBody();
         $nome = $p['nome'];
-        $sobrenome = $p['sobrenome'];
         $email = $p['email'];
-        $cpf = $p['cpf'];
-        $rg = $p['rg'];
-        $nascimento = $p['nascimento'];
         $senha = password_hash($p['senha'], PASSWORD_DEFAULT); // criptografa a senha do Cliente para salvar no banco
-
-
+        $nivel = $p['cod_nivel'];
+        
         if( ClienteController::verificaEmail($email) == NULL ) { // verifica se o email já foi cadastrado
-            $cliente = ClienteModel::create([
-                'nome' => $nome,
-                'sobrenome' => $sobrenome,
-                'email' => $email,
-                'senha' => $senha,
-                'cpf' => $cpf,
-                'rg' => $rg,
-                'nascimento' => $nascimento
-            ]);
-            return $response->withJson($cliente, 201);
+            $cliente = ClienteModel::create(['nome'=>$nome,'email'=>$email,'senha'=>$senha,'cod_nivel'=>$nivel]);
+            return $response->withJson($cliente, 201); 
         } else {
             return $response->withJson([
                 "resposta" => false,
                 "msg" => "E-mail já cadastrado"
-            ], 200);
-        }
+            ], 200); 
+        }       
 
     }
 
@@ -52,40 +40,34 @@ class ClienteController {
         $p = $request->getParsedBody();
         $id = $args['id'];
         $nome = $p['nome'];
-        $sobrenome = $p['sobrenome'];
         $email = $p['email'];
-        $cpf = $p['cpf'];
-        $rg = $p['rg'];
-        $nascimento = $p['nascimento'];
         $senha = password_hash($p['senha'], PASSWORD_DEFAULT); // criptografa a senha do Cliente para salvar no banco
+        $nivel = $p['cod_nivel'];
 
         try {
             $cliente = ClienteModel::find($id);
 
             $cliente->nome = $nome;
-            $cliente->sobrenome = $sobrenome;
             $cliente->email = $email;
             $cliente->senha = $senha;
-            $cliente->cpf = $cpf;
-            $cliente->rg = $rg;
-            $cliente->nascimento = $nascimento;
+            $cliente->cod_nivel = $nivel;
 
-            $cliente->save();
-
-            return $response->withJson($cliente, 200);
+            $cliente->save();  
+            
+            return $response->withJson($cliente, 200); 
         } catch(Exception $e) {
             echo 'Exceção capturada: ',  $e->getMessage(), "\n";
         }
 
     }
 
-    public static function buscarPorId($request, $response, $args) {
+    public static function buscarPorId($request, $response, $args) {        
         $id = $args['id'];
 
         try {
             $cliente = ClienteModel::find($id);
-
-            return $response->withJson($cliente, 200);
+    
+            return $response->withJson($cliente, 200); 
         } catch(Exception $e) {
             echo 'Exceção capturada: ',  $e->getMessage(), "\n";
         }
@@ -96,15 +78,15 @@ class ClienteController {
         $cliente = ClienteModel::find($id);
 
         if( $cliente ) {
-            $cliente->delete();
+            $cliente->delete();    
         } else {
             $cliente = new \stdClass();
-
+            
             $cliente->resposta = false;
             $cliente->msg = "Usuário não encontrado.";
-        }
+        }        
 
-        return $response->withJson($cliente, 200);
+        return $response->withJson($cliente, 200); 
     }
 
     public static function login($request, $response, $args, $sKey) {
@@ -113,17 +95,25 @@ class ClienteController {
 
         foreach ($cliente as $c) {
             if( password_verify( $p['senha'], $c->senha ) ) {
+                date_default_timezone_set('America/Sao_Paulo');
+
+                $issuedAt = time();
+
                 $token = array(
                     'user' => strval($c->cod_cliente),
-                    'nome' => $c->nome
+                    'name' => $c->nome,
+                    'date' => date("Y-m-d H:i:s"),
+                    'iat' => $issuedAt,
+                    'nbf' => $issuedAt,
+                    'exp' => $issuedAt + 3600
                 );
-
+                
                 $jwt = JWT::encode($token, $sKey);
 
-                return $response->withJson(["token" => $jwt], 201)
-                    ->withHeader('Content-type', 'application/json');
+                return $response->withJson(["token" => $jwt, "nome" => $c->nome, "codigo" => $c->cod_cliente, "email" => $c->email], 200)
+                    ->withHeader('Content-type', 'application/json');   
             } else {
-                return $response->withJson(["resposta"=> false, "msg" => "Usuário ou senha inválidos"], 200);
+                return $response->withJson(["resposta"=> false, "msg" => "Usuário ou senha inválidos"], 200);           
             }
         }
 
