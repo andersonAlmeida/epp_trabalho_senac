@@ -20,20 +20,9 @@ return [
         'db' => [
             'driver' => 'pgsql',
             'host' => 'localhost',
-            'database' => 'epp_db',
+            'database' => 'apis_e_frameworks_2019-2-n',
             'username' => 'postgres',
             'password' => 'postgres',
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-        ],
-
-        'db_prod' => [
-            'driver' => 'pgsql',
-            'host' => 'ec2-107-22-238-217.compute-1.amazonaws.com',
-            'database' => 'd9nofmav13flqe',
-            'username' => 'fltpmuyogmazrf',
-            'password' => '6c2208abc3947d0fbb4dcb3d4a9fa03953d61854ab35d5c4446024404e60049a',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
